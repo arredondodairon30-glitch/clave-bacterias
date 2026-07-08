@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrar — Clave Interactiva de Bacteriología</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <div>
+      <h1>Administrar Clave de Bacteriología</h1>
+      <p class="subtitle">Gestiona bacterias, pruebas bioquímicas y conexión con GitHub</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="index.html">🔬 Volver a consultar</a>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <div id="loadError" class="load-error" hidden>
+    <strong>⚠️ Modo local detectado</strong>
+    <p>Los navegadores bloquean la lectura de archivos locales por seguridad. 
+    Para usar esta app, súbela a <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> 
+    o ejecuta un servidor local.</p>
+  </div>
+
+  <!-- Configuración de conexión con GitHub -->
+  <div class="card" id="configCard">
+    <h2 class="panel-title">Conexión con tu repositorio</h2>
+    <p class="hint">
+      Esto se guarda solo en este navegador. Necesitas un
+      <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">Personal Access Token (fine-grained)</a>
+      de GitHub con permiso <strong>Contents: Read and write</strong> sobre este repositorio.
+    </p>
+    <div class="config-grid">
+      <label>Usuario/organización de GitHub
+        <input type="text" id="cfgOwner" placeholder="ej. dairon-dev">
+      </label>
+      <label>Nombre del repositorio
+        <input type="text" id="cfgRepo" placeholder="ej. clave-bacterias">
+      </label>
+      <label>Ruta del archivo de datos
+        <input type="text" id="cfgPath" value="bacterias.json">
+      </label>
+      <label>Rama
+        <input type="text" id="cfgBranch" value="main">
+      </label>
+      <label class="span-2">Token de acceso personal
+        <input type="password" id="cfgToken" placeholder="github_pat_...">
+      </label>
+    </div>
+    <div class="config-actions">
+      <button id="btnSaveConfig" class="btn-primary">Guardar conexión</button>
+      <button id="btnClearConfig" class="btn-ghost">Borrar token de este navegador</button>
+      <span id="configStatus" class="status-text"></span>
+    </div>
+  </div>
+
+  <!-- Formulario de alta/edición de bacterias -->
+  <div class="card" id="formCard">
+    <h2 class="panel-title" id="formTitle">Agregar bacteria nueva</h2>
+    <form id="bacteriaForm" class="bacteria-form">
+      <input type="hidden" id="fId">
+
+      <label>Nombre científico
+        <input type="text" id="fNombre" required placeholder="ej. Staphylococcus aureus">
+      </label>
+      <label>Género
+        <input type="text" id="fGenero" placeholder="ej. Staphylococcus">
+      </label>
+
+      <div id="dynamicFieldsContainer" class="span-2"></div>
+
+      <label class="span-2">Notas / dato clínico clave
+        <textarea id="fNotas" rows="2" placeholder="ej. Brillo metálico en EMB..."></textarea>
+      </label>
+
+      <div class="form-actions span-2">
+        <button type="submit" class="btn-primary" id="btnSaveBacteria">Guardar en GitHub</button>
+        <button type="button" class="btn-ghost" id="btnCancelEdit">Cancelar edición</button>
+        <span id="saveStatus" class="status-text"></span>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla de bacterias existentes -->
+  <div class="card">
+    <h2 class="panel-title">Bacterias en la base de datos <span class="panel-title-sub" id="totalCount"></span></h2>
+    <div class="table-wrap">
+      <table class="admin-table" id="adminTable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <!-- Las demás columnas se generan dinámicamente desde el esquema -->
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Gestión de pruebas / criterios (esquema dinámico) -->
+  <div class="card" id="esquemaCard">
+    <h2 class="panel-title">Gestionar pruebas y criterios</h2>
+    <p class="hint">
+      Aquí agregas una prueba bioquímica nueva (ej. "Citrato", "Indol", "Movilidad") sin tocar código.
+      Puedes agruparla bajo un mismo título junto a otras (ej. todas las fermentaciones bajo
+      "Fermentación de carbohidratos"). El identificador interno de una prueba no cambia después de
+      creada, aunque edites su nombre visible.
+    </p>
+    <form id="esquemaForm" class="bacteria-form">
+      <input type="hidden" id="eKey">
+      <label>Nombre de la prueba (como se mostrará)
+        <input type="text" id="eLabel" required placeholder="ej. Citrato">
+      </label>
+      <label>Tipo de resultado
+        <select id="eTipo">
+          <option value="single">Único resultado (ej. + / − / variable)</option>
+          <option value="multi">Selección múltiple (ej. estructuras presentes)</option>
+        </select>
+      </label>
+      <label>Agrupar bajo (opcional)
+        <input type="text" id="eGrupo" placeholder="ej. Fermentación de carbohidratos">
+      </label>
+      <label class="span-2">Opciones posibles (separadas por coma)
+        <input type="text" id="eOpciones" value="+, -, variable">
+      </label>
+      <div class="form-actions span-2">
+        <button type="submit" class="btn-primary">Guardar prueba</button>
+        <button type="button" class="btn-ghost" id="btnCancelEsquema">Cancelar edición</button>
+        <span id="esquemaStatus" class="status-text"></span>
+      </div>
+    </form>
+    <div class="table-wrap">
+      <table class="admin-table" id="esquemaTable">
+        <thead><tr><th>Prueba</th><th>Tipo</th><th>Grupo</th><th>Opciones</th><th></th></tr></thead>
+        <tbody id="esquemaTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer class="app-footer">
+  <span>Panel de administración · los datos viven en <code>bacterias.json</code></span>
+</footer>
+
+<script src="admin.js"></script>
+</body>
+</html>
