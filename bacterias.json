@@ -157,6 +157,15 @@
         "fimbrias",
         "LPS/membrana externa"
       ]
+    },
+    "prueba_1": {
+      "label": "Prueba 1",
+      "tipo": "single",
+      "opciones": [
+        "Amarillo",
+        "AZul",
+        "Rojo"
+      ]
     }
   },
   "bacterias": [
