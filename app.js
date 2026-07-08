@@ -275,7 +275,42 @@ function cargarConfigEnFormulario() {
   document.getElementById("cfgToken").value = cfg.token || "";
 }
 
-document.getElementById("btnSaveConfig").addEventListener("click", () => {
+/* Verifica el token contra la API de GitHub (una petición GET real) antes
+   de guardar la conexión y mostrar el panel. Así nadie ve el formulario de
+   administración sin un token válido para ESE repositorio específico. */
+async function verificarYDesbloquear(cfg, statusEl) {
+  statusEl.textContent = "Verificando token…";
+  statusEl.className = "status-text";
+  try {
+    const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+    const res = await fetch(url, {
+      headers: { "Authorization": `Bearer ${cfg.token}`, "Accept": "application/vnd.github+json" }
+    });
+    if (!res.ok) {
+      statusEl.textContent = res.status === 404
+        ? "No se encontró el repositorio/archivo. Revisa usuario, repo y ruta."
+        : "Token inválido o sin permisos de escritura sobre este repositorio.";
+      statusEl.className = "status-text err";
+      return false;
+    }
+    setConfig(cfg);
+    mostrarPanelDesbloqueado(cfg);
+    return true;
+  } catch (err) {
+    statusEl.textContent = "No se pudo verificar (revisa tu conexión a internet).";
+    statusEl.className = "status-text err";
+    return false;
+  }
+}
+
+function mostrarPanelDesbloqueado(cfg) {
+  document.getElementById("adminLock").hidden = true;
+  document.getElementById("adminUnlocked").hidden = false;
+  document.getElementById("repoLabelAdmin").textContent = `${cfg.owner}/${cfg.repo}`;
+  document.getElementById("configStatus").textContent = "";
+}
+
+document.getElementById("btnUnlock").addEventListener("click", () => {
   const cfg = {
     owner: document.getElementById("cfgOwner").value.trim(),
     repo: document.getElementById("cfgRepo").value.trim(),
@@ -283,19 +318,39 @@ document.getElementById("btnSaveConfig").addEventListener("click", () => {
     branch: document.getElementById("cfgBranch").value.trim() || "main",
     token: document.getElementById("cfgToken").value.trim()
   };
-  setConfig(cfg);
-  const status = document.getElementById("configStatus");
-  status.textContent = "Conexión guardada en este navegador.";
-  status.className = "status-text ok";
+  if (!cfg.owner || !cfg.repo || !cfg.token) {
+    const status = document.getElementById("configStatus");
+    status.textContent = "Completa usuario, repositorio y token.";
+    status.className = "status-text err";
+    return;
+  }
+  verificarYDesbloquear(cfg, document.getElementById("configStatus"));
+});
+
+document.getElementById("btnLockAgain").addEventListener("click", () => {
+  document.getElementById("adminUnlocked").hidden = true;
+  document.getElementById("adminLock").hidden = false;
 });
 
 document.getElementById("btnClearConfig").addEventListener("click", () => {
   localStorage.removeItem(CFG_KEY);
   cargarConfigEnFormulario();
+  document.getElementById("adminUnlocked").hidden = true;
+  document.getElementById("adminLock").hidden = false;
   const status = document.getElementById("configStatus");
   status.textContent = "Token borrado de este navegador.";
   status.className = "status-text";
 });
+
+/* Si ya hay una conexión guardada de una visita anterior, se verifica en
+   silencio al cargar la página para no pedirle el token de nuevo al dueño. */
+async function intentarDesbloqueoAutomatico() {
+  const cfg = getConfig();
+  if (cfg.owner && cfg.repo && cfg.token) {
+    const ok = await verificarYDesbloquear(cfg, document.getElementById("configStatus"));
+    if (!ok) document.getElementById("configStatus").textContent = "";
+  }
+}
 
 /* ---------------------------------------------------------
    ADMIN: formulario de bacteria — campos dinámicos según ESQUEMA
@@ -600,3 +655,4 @@ function utf8ToBase64(str) {
    --------------------------------------------------------- */
 cargarConfigEnFormulario();
 cargarDatos();
+intentarDesbloqueoAutomatico();

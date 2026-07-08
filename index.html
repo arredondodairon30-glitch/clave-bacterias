@@ -66,13 +66,14 @@
   <!-- ============ MODO ADMINISTRAR ============ -->
   <section id="view-admin" class="view">
 
-    <!-- Configuración de conexión con GitHub -->
-    <div class="card" id="configCard">
-      <h2 class="panel-title">Conexión con tu repositorio</h2>
+    <!-- Pantalla de candado: se muestra siempre primero -->
+    <div class="lock-screen" id="adminLock">
+      <div class="lock-icon" aria-hidden="true">🔒</div>
+      <h2 class="panel-title">Panel de administrador protegido</h2>
       <p class="hint">
-        Esto se guarda solo en este navegador. Necesitas un
-        <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">Personal Access Token (fine-grained)</a>
-        de GitHub con permiso <strong>Contents: Read and write</strong> sobre este repositorio.
+        Ingresa tu <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">Personal Access Token</a>
+        de GitHub para desbloquear. Se verifica en el momento y se guarda solo en este navegador —
+        no se envía a ningún otro lugar más que a la API de GitHub.
       </p>
       <div class="config-grid">
         <label>Usuario/organización de GitHub
@@ -92,10 +93,19 @@
         </label>
       </div>
       <div class="config-actions">
-        <button id="btnSaveConfig" class="btn-primary">Guardar conexión</button>
-        <button id="btnClearConfig" class="btn-ghost">Borrar token de este navegador</button>
+        <button id="btnUnlock" class="btn-primary">Desbloquear panel</button>
         <span id="configStatus" class="status-text"></span>
       </div>
+      <p class="lock-note">Esto evita que alguien entre por error o curiosidad; no sustituye mantener tu token en secreto.</p>
+    </div>
+
+    <!-- Todo lo demás queda oculto hasta verificar el token -->
+    <div id="adminUnlocked" hidden>
+
+    <div class="admin-topbar">
+      <span class="status-text ok">🔓 Conectado a <code id="repoLabelAdmin"></code></span>
+      <button id="btnLockAgain" class="btn-ghost">Bloquear panel</button>
+      <button id="btnClearConfig" class="btn-ghost">Borrar token de este navegador</button>
     </div>
 
     <!-- Formulario de alta/edición de bacterias -->
@@ -179,6 +189,8 @@
         </table>
       </div>
     </div>
+
+    </div><!-- /adminUnlocked -->
 
   </section>
 
