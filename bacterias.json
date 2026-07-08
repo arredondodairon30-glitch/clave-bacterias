@@ -440,25 +440,26 @@
       "id": "corynebacterium_diphtheriae",
       "nombre": "Corynebacterium diphtheriae",
       "genero": "Corynebacterium",
+      "notas": "Reduce telurito a teluro metálico (colonias negras). Confirmar con prueba de Elek.",
       "gram": "positivo",
       "morfologia": "bacilos",
-      "agrupacion": [
-        "empalizada"
-      ],
       "catalasa": "+",
       "oxidasa": "-",
       "coagulasa": "",
       "ureasa": "-",
       "hemolisis": "gamma",
       "oxigeno": "anaerobio facultativo",
+      "agrupacion": [
+        "empalizada"
+      ],
+      "estructura": [],
+      "prueba_1": "AZul",
       "ferm_lactosa": "",
       "ferm_glucosa": "+",
       "ferm_manitol": "",
       "ferm_sacarosa": "",
       "ferm_xilosa": "",
-      "ferm_salicina": "",
-      "estructura": [],
-      "notas": "Reduce telurito a teluro metálico (colonias negras). Confirmar con prueba de Elek."
+      "ferm_salicina": ""
     }
   ]
 }
