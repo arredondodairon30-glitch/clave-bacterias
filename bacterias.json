@@ -450,32 +450,6 @@
       "ferm_salicina": "",
       "estructura": [],
       "notas": "Reduce telurito a teluro metálico (colonias negras). Confirmar con prueba de Elek."
-    },
-    {
-      "id": "prueba_1",
-      "nombre": "Prueba 1",
-      "genero": "Genero 2",
-      "notas": "Lorem ipsum",
-      "gram": "negativo",
-      "morfologia": "cocos",
-      "catalasa": "variable",
-      "oxidasa": "+",
-      "coagulasa": "-",
-      "ureasa": "-",
-      "hemolisis": "beta",
-      "oxigeno": "aerobio estricto",
-      "agrupacion": [
-        "tetradas"
-      ],
-      "estructura": [
-        "esporas"
-      ],
-      "ferm_lactosa": "variable",
-      "ferm_glucosa": "variable",
-      "ferm_manitol": "-",
-      "ferm_sacarosa": "-",
-      "ferm_xilosa": "+",
-      "ferm_salicina": "+"
     }
   ]
 }
