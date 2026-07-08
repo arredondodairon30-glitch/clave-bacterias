@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administración - Clave Interactiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <div>
+      <h1>Panel de Administración</h1>
+      <p class="subtitle">Gestiona bacterias y pruebas. Tus cambios se guardarán directo en GitHub.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="view-admin" class="view is-active">
+    
+    <div class="card" id="configCard">
+      <h2 class="panel-title">Conexión con tu repositorio</h2>
+      <div class="config-grid">
+        <label>Usuario GitHub <input type="text" id="cfgOwner" placeholder="ej. dairon-dev"></label>
+        <label>Repositorio <input type="text" id="cfgRepo" placeholder="ej. clave-bacterias"></label>
+        <label>Ruta archivo <input type="text" id="cfgPath" value="bacterias.json"></label>
+        <label>Rama <input type="text" id="cfgBranch" value="main"></label>
+        <label class="span-2">Token acceso <input type="password" id="cfgToken" placeholder="github_pat_..."></label>
+      </div>
+      <div class="config-actions">
+        <button id="btnSaveConfig" class="btn-primary">Guardar conexión</button>
+        <button id="btnClearConfig" class="btn-ghost">Borrar token</button>
+        <span id="configStatus" class="status-text"></span>
+      </div>
+    </div>
+
+    <div class="card" id="formCard">
+      <h2 class="panel-title" id="formTitle">Agregar bacteria nueva</h2>
+      <form id="bacteriaForm" class="bacteria-form">
+        <input type="hidden" id="fId">
+        <label>Nombre científico <input type="text" id="fNombre" required placeholder="ej. Staphylococcus aureus"></label>
+        <label>Género <input type="text" id="fGenero" placeholder="ej. Staphylococcus"></label>
+        <div id="dynamicFieldsContainer" class="span-2"></div>
+        <label class="span-2">Notas / dato clave <textarea id="fNotas" rows="2"></textarea></label>
+        <div class="form-actions span-2">
+          <button type="submit" class="btn-primary" id="btnSaveBacteria">Guardar en GitHub</button>
+          <button type="button" class="btn-ghost" id="btnCancelEdit">Cancelar edición</button>
+          <span id="saveStatus" class="status-text"></span>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="panel-title">Bacterias en la base de datos <span class="panel-title-sub" id="totalCount"></span></h2>
+      <div class="table-wrap">
+        <table class="admin-table" id="adminTable">
+          <thead><tr><th>Nombre</th><th>Gram</th><th>Morfología</th><th></th></tr></thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" id="esquemaCard">
+      <h2 class="panel-title">Gestionar pruebas y criterios</h2>
+      <form id="esquemaForm" class="bacteria-form">
+        <input type="hidden" id="eKey">
+        <label>Nombre de la prueba <input type="text" id="eLabel" required placeholder="ej. Citrato"></label>
+        <label>Tipo <select id="eTipo"><option value="single">Único resultado</option><option value="multi">Selección múltiple</option></select></label>
+        <label>Agrupar bajo <input type="text" id="eGrupo" placeholder="ej. Fermentación"></label>
+        <label class="span-2">Opciones <input type="text" id="eOpciones" value="+, -, variable"></label>
+        <div class="form-actions span-2">
+          <button type="submit" class="btn-primary">Guardar prueba</button>
+          <button type="button" class="btn-ghost" id="btnCancelEsquema">Cancelar edición</button>
+          <span id="esquemaStatus" class="status-text"></span>
+        </div>
+      </form>
+      <div class="table-wrap">
+        <table class="admin-table" id="esquemaTable">
+          <thead><tr><th>Prueba</th><th>Tipo</th><th>Grupo</th><th>Opciones</th><th></th></tr></thead>
+          <tbody id="esquemaTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+</main>
+<script src="admin.js"></script>
+</body>
+</html>

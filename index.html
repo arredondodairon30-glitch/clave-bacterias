@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clave Interactiva de Bacteriología</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <div>
+      <h1>Clave Interactiva de Bacteriología</h1>
+      <p class="subtitle">Selecciona resultados de laboratorio y descarta bacterias en tiempo real</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="view-consulta" class="view is-active">
+    <div id="loadError" class="load-error" hidden>
+      Este archivo se abrió directamente en el navegador. Usa GitHub Pages o un servidor local.
+    </div>
+
+    <div class="counter-hero" aria-live="polite">
+      <span class="counter-number" id="counterNumber">—</span>
+      <span class="counter-label" id="counterLabel">cargando base de datos…</span>
+      <button id="btnReset" class="btn-ghost">Reiniciar selección</button>
+    </div>
+
+    <div class="consulta-grid">
+      <aside class="filters-panel" id="filtersPanel" aria-label="Pruebas y resultados"></aside>
+      <div class="results-panel">
+        <h2 class="panel-title">Candidatas <span class="panel-title-sub">(coinciden con tu selección · clic para ver ficha)</span></h2>
+        <div id="resultsGrid" class="results-grid"></div>
+
+        <details class="discarded-wrap" id="discardedWrap">
+          <summary>Descartadas <span id="discardedCount">(0)</span></summary>
+          <div id="discardedGrid" class="results-grid results-grid--discarded"></div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay" id="bactModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer class="app-footer">
+  <span>Hecho para repasar bacteriología · los datos viven en <code>bacterias.json</code></span>
+</footer>
+
+<script src="public.js"></script>
+</body>
+</html>
